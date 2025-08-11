@@ -1,0 +1,80 @@
+/* Spline Watermark Removal CSS */
+/* This file contains CSS rules to hide Spline branding and watermarks */
+
+/* Primary watermark hiding rules */
+[data-spline-watermark],
+.spline-watermark,
+.spline-branding,
+[class*="spline-watermark"],
+[class*="spline-branding"],
+[class*="spline-logo"],
+[class*="spline-powered"],
+[class*="spline-credit"],
+[class*="spline-attribution"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Hide elements with Spline-related style attributes */
+div[style*="spline"],
+div[style*="watermark"],
+div[style*="branding"],
+div[style*="powered"],
+div[style*="credit"] {
+  display: none !important;
+}
+
+/* Hide iframe elements containing Spline branding */
+iframe[src*="spline"],
+iframe[src*="watermark"],
+iframe[src*="branding"] {
+  display: none !important;
+}
+
+/* Hide elements with Spline-related data attributes */
+[data-spline],
+[data-watermark],
+[data-branding],
+[data-powered-by] {
+  display: none !important;
+}
+
+/* Hide any background images that might be Spline watermarks */
+*:not(body):not(html) {
+  background-image: none !important;
+}
+
+/* Ensure the main Spline content remains visible */
+.spline-container,
+.spline-canvas,
+[data-spline-scene],
+[class*="spline-scene"],
+[class*="spline-container"] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Additional selectors for newer Spline versions */
+[class*="spline-ui"],
+[class*="spline-overlay"],
+[class*="spline-footer"],
+[class*="spline-header"] {
+  display: none !important;
+}
+
+/* Hide any floating or fixed positioned Spline elements */
+[class*="spline"][style*="position: fixed"],
+[class*="spline"][style*="position:absolute"],
+[class*="watermark"][style*="position: fixed"],
+[class*="watermark"][style*="position:absolute"] {
+  display: none !important;
+}
+
+/* Hide elements with z-index that might be overlays */
+[class*="spline"][style*="z-index"],
+[class*="watermark"][style*="z-index"] {
+  display: none !important;
+} 

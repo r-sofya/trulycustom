@@ -1,0 +1,268 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin 'tailwindcss-animate';
+@plugin '@iconify/tailwind4';
+
+@theme /* Theme Colors */ {
+  --theme-font-family-base: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --theme-font-family-heading: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --theme-font-color-base: 255, 255, 255, 1;
+  --theme-font-color-dark: 0, 0, 0, 1;
+  --theme-rounded-base: 8px;
+  --theme-rounded-container: 8px;
+  --theme-border-base: 1px;
+  --on-primary: 255, 255, 255, 1;
+  --on-secondary: 255, 255, 255, 1;
+  --on-tertiary: 0, 0, 0, 1;
+  --on-success: 0, 0, 0, 1;
+  --on-warning: 0, 0, 0, 1;
+  --on-error: 255, 255, 255, 1;
+  --on-surface: 255, 255, 255, 1;
+
+  --color-primary-50: #F0E5F7;
+  --color-primary-100: #E1CCF0;
+  --color-primary-200: #974DCB;
+  --color-primary-300: #974DCB;
+  --color-primary-400: #9C74F7;
+  --color-primary-500: #6B01B6;
+  --color-primary-600: #6633DB;
+  --color-primary-700: #552BB6;
+  --color-primary-800: #442292;
+  --color-primary-900: #382877;
+
+  /* Secondary */
+  --color-secondary-50: rgba(217, 222, 250, 1);
+  --color-secondary-100: rgba(204, 211, 249, 1);
+  --color-secondary-200: rgba(191, 201, 247, 1);
+  --color-secondary-300: rgba(153, 168, 243, 1);
+  --color-secondary-400: rgba(77, 102, 233, 1);
+  --color-secondary-500: rgba(0, 37, 224, 1);
+  --color-secondary-600: rgba(0, 33, 202, 1);
+  --color-secondary-700: rgba(0, 28, 168, 1);
+  --color-secondary-800: rgba(0, 22, 134, 1);
+  --color-secondary-900: rgba(0, 18, 110, 1);
+
+  /* Tertiary */
+  --color-tertiary-50: rgba(219, 242, 252, 1);
+  --color-tertiary-100: rgba(207, 237, 251, 1);
+  --color-tertiary-200: rgba(195, 233, 250, 1);
+  --color-tertiary-300: rgba(159, 219, 246, 1);
+  --color-tertiary-400: rgba(86, 192, 240, 1);
+  --color-tertiary-500: rgba(14, 165, 233, 1);
+  --color-tertiary-600: rgba(13, 149, 210, 1);
+  --color-tertiary-700: rgba(11, 124, 175, 1);
+  --color-tertiary-800: rgba(8, 99, 140, 1);
+  --color-tertiary-900: rgba(7, 81, 114, 1);
+
+  /* Success */
+  --color-success-50: rgba(237, 247, 220, 1);
+  --color-success-100: rgba(230, 245, 208, 1);
+  --color-success-200: rgba(224, 242, 197, 1);
+  --color-success-300: rgba(206, 235, 162, 1);
+  --color-success-400: rgba(169, 219, 92, 1);
+  --color-success-500: rgba(132, 204, 22, 1);
+  --color-success-600: rgba(119, 184, 20, 1);
+  --color-success-700: rgba(99, 153, 17, 1);
+  --color-success-800: rgba(79, 122, 13, 1);
+  --color-success-900: rgba(65, 100, 11, 1);
+
+  /* Warning */
+  --color-warning-50: rgba(252, 244, 218, 1);
+  --color-warning-100: rgba(251, 240, 206, 1);
+  --color-warning-200: rgba(250, 236, 193, 1);
+  --color-warning-300: rgba(247, 225, 156, 1);
+  --color-warning-400: rgba(240, 202, 82, 1);
+  --color-warning-500: rgba(234, 179, 8, 1);
+  --color-warning-600: rgba(211, 161, 7, 1);
+  --color-warning-700: rgba(176, 134, 6, 1);
+  --color-warning-800: rgba(140, 107, 5, 1);
+  --color-warning-900: rgba(115, 88, 4, 1);
+
+  /* Error */
+  --color-error-50: rgba(249, 222, 234, 1);
+  --color-error-100: rgba(246, 209, 228, 1);
+  --color-error-200: rgba(244, 198, 221, 1);
+  --color-error-300: rgba(238, 163, 200, 1);
+  --color-error-400: rgba(225, 94, 159, 1);
+  --color-error-500: rgba(212, 25, 118, 1);
+  --color-error-600: rgba(191, 23, 106, 1);
+  --color-error-700: rgba(159, 19, 89, 1);
+  --color-error-800: rgba(127, 15, 71, 1);
+  --color-error-900: rgba(104, 12, 58, 1);
+
+  /* Surface */
+  --color-surface-50: #dddce3;
+  --color-surface-100: #d1d0da;
+  --color-surface-200: #c6c5d1;
+  --color-surface-300: #a3a2b5;
+  --color-surface-400: #5e5c7d;
+  --color-surface-500: #191645;
+  --color-surface-600: #17143e;
+  --color-surface-700: #131134;
+  --color-surface-800: #0f0d29;
+  --color-surface-900: #0f0d29;
+}
+
+@theme /* Background Colors */ {
+  --color-bg-primary: var(--color-surface-800);
+  --color-bg-primary-light: var(--color-surface-500);
+  --color-bg-secondary: var(--color-secondary-800);
+  --color-bg-secondary-dark: var(--color-secondary-400);
+  --color-bg-accent: var(--color-accent-800);
+  --color-bg-accent-dark: var(--color-accent-400);
+  --color-bg-gray: rgba(107, 114, 128, 1);
+}
+
+@theme /* Text Colors */ {
+  --color-text-primary: white;
+  --color-text-secondary: var(--color-primary-400);
+  --color-text-secondary-dark: var(--color-secondary-400);
+  --color-text-accent: var(--color-accent-800);
+  --color-text-accent-dark: var(--color-accent-400);
+  --color-text-gray: rgba(107, 114, 128, 1);
+}
+
+@theme /* Shadow Colors */ {
+  --color-shadow: var(--color-bg-primary-light);
+}
+
+@layer components {
+  .icon-container {
+    background-color: rgba(96, 95, 102, 0.316);
+    color: var(--color-primary-300);
+  }
+
+  body {
+    color: var(--color-text-primary);
+ 
+  }  
+
+  .card {
+    background-color: var(--color-bg-secondary);
+  }
+}
+
+
+/* Custom utility classes */
+.bg-primary, .hover\:bg-primary:hover { background-color: var(--color-bg-primary); }
+.bg-primary-light, .hover\:bg-primary-light:hover { background-color: var(--color-bg-primary-light); }
+.bg-secondary, .hover\:bg-secondary:hover { background-color: var(--color-bg-secondary); }
+.bg-secondary-dark, .hover\:bg-secondary-dark:hover { background-color: var(--color-bg-secondary-dark); }
+.bg-accent, .hover\:bg-accent:hover { background-color: var(--color-bg-accent); }
+.bg-accent-dark, .hover\:bg-accent-dark:hover { background-color: var(--color-bg-accent-dark); }
+.bg-gray, .hover\:bg-gray:hover { background-color: var(--color-bg-gray); }
+.bg-page, .hover\:bg-page:hover { background-color: var(--color-surface-900); }
+
+
+.text-primary, .hover\:text-primary:hover { color: var(--color-text-primary); text-decoration-line: none; }
+.text-secondary, .hover\:text-secondary:hover { color: var(--color-text-secondary); }
+.text-secondary-dark, .hover\:text-secondary-dark:hover { color: var(--color-text-secondary-dark); }
+.text-accent, .hover\:text-accent:hover { color: var(--color-text-accent); }
+.text-accent-dark, .hover\:text-accent-dark:hover { color: var(--color-text-accent-dark); }
+.text-gray, .hover\:text-gray:hover { color: var(--color-text-gray); }
+
+.transition-all {
+  transition: all ease-in-out;
+  transition-duration: 0.3s ;
+}
+
+input {
+  color: var(--color-text-primary);
+  background-color: var(--color-gray-900);
+  border-radius: var(--theme-rounded-base);
+}
+
+textarea {
+  color: var(--color-text-primary);
+  background-color: var(--color-gray-900);
+  border-radius: var(--theme-rounded-base);
+}
+
+//radio button red when checked, green when unchecked
+input[type="radio"] {
+  accent-color: var(--color-gray-900);
+}
+
+input[type="radio"]:checked {
+  background-color: var(--color-red-500);
+}
+
+/* Spline Watermark Removal */
+/* Hide Spline branding and watermarks */
+[data-spline-watermark],
+.spline-watermark,
+.spline-branding,
+[class*="spline-watermark"],
+[class*="spline-branding"],
+[class*="spline-logo"],
+[class*="spline-powered"],
+[class*="spline-credit"],
+[class*="spline-attribution"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Additional selectors for common Spline watermark patterns */
+div[style*="spline"],
+div[style*="watermark"],
+div[style*="branding"],
+div[style*="powered"],
+div[style*="credit"] {
+  display: none !important;
+}
+
+/* Hide any iframe or overlay elements that might contain Spline branding */
+iframe[src*="spline"],
+iframe[src*="watermark"],
+iframe[src*="branding"] {
+  display: none !important;
+}
+
+/* Hide elements with specific Spline-related attributes */
+[data-spline],
+[data-watermark],
+[data-branding],
+[data-powered-by] {
+  display: none !important;
+}
+
+/* Additional fallback for any remaining Spline elements */
+*:not(body):not(html) {
+  background-image: none !important;
+}
+
+/* Ensure the main Spline canvas/container is still visible */
+.spline-container,
+.spline-canvas,
+[data-spline-scene],
+[class*="spline-scene"],
+[class*="spline-container"] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Custom utility classes */
+.animate-disable {
+  animation-name: none;
+  animation-duration: 0s;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-rotate: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
