@@ -50,7 +50,7 @@
 			"esbuild"
 		]
 	},
-	"packageManager": "pnpm@10.4.0+sha512.6b849d0787d97f8f4e1f03a9b8ff8f038e79e153d6f11ae539ae7c435ff9e796df6a862c991502695c7f9e8fac8aeafc1ac5a8dab47e36148d183832d886dd52",
+	"packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
 	"dependencies": {
 		"@splinetool/runtime": "^1.10.37",
 		"@sveltejs/adapter-node": "^5.2.14",
