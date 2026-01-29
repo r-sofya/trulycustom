@@ -1,285 +1,454 @@
 <script lang="ts">
-      // Form state
-  let firstName = '';
-  let lastName = '';
-  let email = '';
-  let phone = '';
-  let message = '';
-  let terms = false;
-  let budget = '';
-  let submitting = false;
-  let submitted = false;
-  let error = '';
+	import pb, { contactsCollection } from '$lib/utils/pocketbase';
+	import PrimaryButton from '$lib/components/ui/primaryButton.svelte';
 
-  // Replace with your webhook URL
-  const WEBHOOK_URL = 'https://n8n.trulycustom.ca/webhook/c211a8f2-a1a8-4ff8-90c1-2e881735e70c';
+	// Form state
+	let firstName = '';
+	let lastName = '';
+	let email = '';
+	let phone = '';
+	let message = '';
+	let terms = false;
+	let budget = '';
+	let submitting = false;
+	let submitted = false;
+	let error = '';
 
-  async function handleSubmit(e: Event) {
-    console.log('handleSubmit');
-    e.preventDefault();
-    error = '';
-    submitted = false;
+	// Focus states for floating labels
+	let firstNameFocused = false;
+	let lastNameFocused = false;
+	let emailFocused = false;
+	let phoneFocused = false;
+	let budgetFocused = false;
+	let messageFocused = false;
 
-    if (!terms) {
-      error = 'You must agree to the Terms.';
-      return;
-    }
+	// Replace with your webhook URL
+	const WEBHOOK_URL = 'https://n8n.trulycustom.ca/webhook/c211a8f2-a1a8-4ff8-90c1-2e881735e70c';
 
-    submitting = true;
-    try {
-      const res = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          message,
-          budget
-        })
-      });
+	async function handleSubmit(e: Event) {
+		console.log('handleSubmit');
+		e.preventDefault();
+		error = '';
+		submitted = false;
 
-      if (!res.ok) {
-        throw new Error('Failed to submit form');
-      }
+		if (!terms) {
+			error = 'You must agree to the Terms.';
+			return;
+		}
 
-      submitted = true;
-      // Optionally reset form
-      firstName = '';
-      lastName = '';
-      email = '';
-      phone = '';
-      message = '';
-      budget = '';
-      terms = false;
-    } catch (err: unknown) {
-      error = err instanceof Error ? err.message : 'Submission failed';
-    } finally {
-      submitting = false;
-    }
-  }
+		submitting = true;
 
-  
+		const formData = {
+			firstName,
+			lastName,
+			email,
+			phone,
+			message,
+			budget
+		};
+
+		try {
+			// Send to both webhook and PocketBase in parallel
+			const [webhookRes] = await Promise.all([
+				fetch(WEBHOOK_URL, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(formData)
+				}),
+				pb.collection(contactsCollection).create(formData)
+			]);
+
+			if (!webhookRes.ok) {
+				throw new Error('Failed to submit form');
+			}
+
+			submitted = true;
+			// Reset form
+			firstName = '';
+			lastName = '';
+			email = '';
+			phone = '';
+			message = '';
+			budget = '';
+			terms = false;
+		} catch (err: unknown) {
+			error = err instanceof Error ? err.message : 'Submission failed';
+		} finally {
+			submitting = false;
+		}
+	}
 </script>
 
+<section id="Contact" class="relative px-[5%] py-14 md:py-20 lg:py-24">
+	<div class="relative z-10 container">
+		<!-- Header Section -->
+		<div class="mx-auto mb-10 max-w-2xl text-center md:mb-12">
+			<span
+				class="mb-3 inline-block rounded-full bg-primary-500/10 px-4 py-1.5 text-sm font-medium text-primary-400 ring-1 ring-primary-500/20"
+			>
+				Let's Connect
+			</span>
+			<h2 class="mb-3 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+				Start Your <span class="bg-gradient-to-r from-primary-400 to-primary-600">Project</span>
+			</h2>
+			<p class="text-base text-gray-400 md:text-lg">
+				Ready to bring your ideas to life? Drop us a message and let's create something amazing
+				together.
+			</p>
+		</div>
 
-<section id="Contact" class="px-[5%] py-16 md:py-24 lg:py-28">
-  <div
-    class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-2 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16"
-  >
-    <div>
-      <div class="mb-6 md:mb-8">
-        <p class="mb-3 font-semibold md:mb-4">Connect</p>
-        <h2 class="mb-3 text-5xl font-bold md:mb-4 ">Get in Touch</h2>
-        <p class="text-medium">We'd love to hear from you!</p>
-      </div>
-      <div class="grid grid-cols-1 gap-4 py-2">
-        <div class="flex items-center gap-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24px"
-            height="24px"
-            viewBox="0 -960 960 960"
-            class="size-6 flex-none text-scheme-text"
-            fill="currentColor"
-          >
-            <path
-              d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm640-480L501-453q-5 3-10.5 4.5T480-447q-5 0-10.5-1.5T459-453L160-640v400h640v-400ZM480-520l320-200H160l320 200ZM160-640v10-59 1-32 32-.5 58.5-10 400-400Z"
-            ></path>
-          </svg>
-          <p>hello@relume.io</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24px"
-            height="24px"
-            viewBox="0 -960 960 960"
-            class="size-6 flex-none text-scheme-text"
-            fill="currentColor"
-          >
-            <path
-              d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"
-            ></path>
-          </svg>
-          <p>+1 (555) 000-0000</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24px"
-            height="24px"
-            viewBox="0 -960 960 960"
-            class="size-6 flex-none text-scheme-text"
-            fill="currentColor"
-          >
-            <path
-              d="M480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 79q-14 0-28-5t-25-15q-65-60-115-117t-83.5-110.5q-33.5-53.5-51-103T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 45-17.5 94.5t-51 103Q698-301 648-244T533-127q-11 10-25 15t-28 5Zm0-453Zm0 80q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Z"
-            ></path>
-          </svg>
-          <p>123 Sample St, Sydney NSW 2000 AU</p>
-        </div>
-      </div>
-    </div>
+		<div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12">
+			<!-- Contact Info Cards -->
+			<div class="flex flex-col gap-4 lg:col-span-2">
+				<!-- Email Card -->
+				<div
+					class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-all duration-300 hover:border-primary-500/30 hover:bg-white/10"
+				>
+					<div
+						class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+					></div>
+					<div class="relative flex items-center gap-4">
+						<div
+							class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-500/20 text-primary-400 transition-transform duration-300 group-hover:scale-110"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<rect width="20" height="16" x="2" y="4" rx="2" />
+								<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-sm font-semibold text-white">Email Us</h3>
+							<p
+								class="text-sm text-gray-400 transition-colors duration-300 group-hover:text-primary-400"
+							>
+								hello@trulycustom.ca
+							</p>
+						</div>
+					</div>
+				</div>
 
-    <form class="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6" onsubmit={handleSubmit}>
-      <div class="grid grid-cols-2 gap-6">
-        <div class="grid w-full items-center">
-          <label
-            data-slot="label"
-            class="flex items-center gap-2 select-none mb-2"
-            for="firstName"
-            >First Name</label
-          >
-          <div class="relative flex w-full items-center">
-            <input
-              type="text"
-              data-slot="input"
-              placeholder="John"
-              class="flex size-full rounded-form align-middle transition-all duration-200 border border-scheme-border bg-scheme-background min-h-11 px-3 py-2"
-              id="firstName"
-              bind:value={firstName}
-              required
-            />
-          </div>
-        </div>
-        <div class="grid w-full items-center">
-          <label
-            data-slot="label"
-            class="flex items-center gap-2 select-none mb-2"
-            for="lastName"
-            >Last Name</label
-          >
-          <div class="relative flex w-full items-center">
-            <input
-              type="text"
-              data-slot="input"
-              placeholder="Doe"
-              class="flex size-full rounded-form align-middle transition-all duration-200 border border-scheme-border bg-scheme-background min-h-11 px-3 py-2"
-              id="lastName"
-              bind:value={lastName}
-              required
-            />
-          </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div class="grid w-full items-center">
-          <label
-            data-slot="label"
-            class="flex items-center gap-2 select-none mb-2"
-            for="email"
-            >Email</label
-          >
-          <div class="relative flex w-full items-center">
-            <input
-              type="email"
-              data-slot="input"
-              placeholder="example@email.com"
-              class="flex size-full rounded-form align-middle transition-all duration-200 border border-scheme-border bg-scheme-background min-h-11 px-3 py-2"
-              id="email"
-              bind:value={email}
-              required
-            />
-          </div>
-        </div>
-        <div class="grid w-full items-center">
-          <label
-            data-slot="label"
-            class="flex items-center gap-2 select-none mb-2"
-            for="phone"
-            >Phone Number</label
-          >
-          <div class="relative flex w-full items-center">
-            <input
-              type="text"
-              data-slot="input"
-              placeholder="+1 (555) 000-0000"
-              class="flex size-full rounded-form align-middle transition-all duration-200 border border-scheme-border bg-scheme-background min-h-11 px-3 py-2"
-              id="phone"
-              bind:value={phone}
-            />
-          </div>
-        </div>
-      </div>
-      <div class="grid w-full items-center">
-        <label
-          data-slot="label"
-          class="flex items-center gap-2 select-none mb-2"
-          for="budget"
-          >Budget</label
-        >
-        <div class="relative flex w-full items-center">
-          <input
-            type="text"
-            data-slot="input"
-            placeholder="Enter your budget" 
-            class="flex size-full rounded-form align-middle transition-all duration-200 border border-scheme-border bg-scheme-background min-h-11 px-3 py-2"
-            id="budget"
-            bind:value={budget}
-          />
-        </div>
-      </div>
-      <div class="grid w-full items-center">
-        <label
-          data-slot="label"
-          class="flex items-center gap-2 select-none mb-2"
-          for="message"
-          >Message</label
-        >
-        <textarea
-          data-slot="textarea"
-          class="flex w-full rounded-form focus-visible:outline-none border border-scheme-border bg-scheme-background p-3 min-h-[11.25rem] overflow-auto"
-          id="message"
-          placeholder="Write your thoughts..."
-          bind:value={message}
-          required
-        ></textarea>
-      </div>
-      <div class="text-small mb-3 flex items-center space-x-2 md:mb-4">
-        <label class="relative flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            id="terms"
-            bind:checked={terms}
-            class="peer size-[1.125rem] rounded-checkbox transition-all duration-200 border border-scheme-border appearance-none bg-scheme-background checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary"
-            required
-          />
-          <span class="pointer-events-none absolute left-0 top-0 flex h-[1.125rem] w-[1.125rem] items-center justify-center">
-            {#if terms}
-              <svg class="text-white" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4 8.5L7 11.5L12 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            {/if}
-          </span>
-        </label>
-        <label
-          data-slot="label"
-          class="flex items-center gap-2 select-none cursor-pointer"
-          for="terms"
-          >I agree to the Terms</label
-        >
-      </div>
-      {#if error}
-        <div class="text-red-600">{error}</div>
-      {/if}
-      {#if submitted}
-        <div class="text-green-600">Thank you for your message!</div>
-      {/if}
-      <div>
-        <button
-          data-slot="button"
-          class="inline-flex items-center justify-center gap-3 rounded-button whitespace-nowrap transition-all duration-200 ease-in-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-scheme-border bg-neutral-darkest text-white px-6 py-3"
-          title="Submit"
-          type="submit"
-          disabled={submitting}
-        >
-          {submitting ? 'Submitting...' : 'Submit'}
-        </button>
-      </div>
-    </form>
-  </div>
+				<!-- Response Time Badge -->
+				<div
+					class="mt-2 flex items-center gap-3 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-2.5"
+				>
+					<div class="relative flex h-2.5 w-2.5">
+						<span
+							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
+						></span>
+						<span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500"></span>
+					</div>
+					<span class="text-sm text-green-400">Usually responds within 24 hours</span>
+				</div>
+
+				<!-- What to Expect Timeline -->
+				<div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+					<h3 class="mb-4 text-base font-semibold text-white">What to Expect</h3>
+					<div class="relative space-y-4">
+						<!-- Timeline line -->
+						<div
+							class="absolute top-2 left-[11px] h-[calc(100%-16px)] w-0.5 bg-gradient-to-b from-primary-500 to-primary-500/20"
+						></div>
+
+						<!-- Step 1 -->
+						<div class="relative flex items-start gap-3">
+							<div
+								class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white"
+							>
+								1
+							</div>
+							<div>
+								<p class="text-base font-medium text-white">Submit Inquiry</p>
+								<p class="text-sm text-gray-500">Share your project details</p>
+							</div>
+						</div>
+
+						<!-- Step 2 -->
+						<div class="relative flex items-start gap-3">
+							<div
+								class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500/80 text-xs font-bold text-white"
+							>
+								2
+							</div>
+							<div>
+								<p class="text-base font-medium text-white">We Review</p>
+								<p class="text-sm text-gray-500">Assess your needs & goals</p>
+							</div>
+						</div>
+
+						<!-- Step 3 -->
+						<div class="relative flex items-start gap-3">
+							<div
+								class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500/60 text-xs font-bold text-white"
+							>
+								3
+							</div>
+							<div>
+								<p class="text-base font-medium text-white">Schedule Call</p>
+								<p class="text-sm text-gray-500">Discuss your vision together</p>
+							</div>
+						</div>
+
+						<!-- Step 4 -->
+						<div class="relative flex items-start gap-3">
+							<div
+								class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500/40 text-xs font-bold text-white"
+							>
+								4
+							</div>
+							<div>
+								<p class="text-base font-medium text-white">Start Building</p>
+								<p class="text-sm text-gray-500">Bring your idea to life</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Contact Form -->
+			<div class="lg:col-span-3">
+				<form
+					class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:p-8"
+					on:submit={handleSubmit}
+				>
+					<div class="relative space-y-5">
+						<!-- Name Row -->
+						<div class="grid gap-5 md:grid-cols-2">
+							<!-- First Name -->
+							<div class="group relative">
+								<input
+									type="text"
+									id="firstName"
+									bind:value={firstName}
+									on:focus={() => (firstNameFocused = true)}
+									on:blur={() => (firstNameFocused = false)}
+									required
+									class="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+									placeholder="First Name"
+								/>
+								<label
+									for="firstName"
+									class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-primary-400"
+								>
+									First Name
+								</label>
+							</div>
+
+							<!-- Last Name -->
+							<div class="group relative">
+								<input
+									type="text"
+									id="lastName"
+									bind:value={lastName}
+									on:focus={() => (lastNameFocused = true)}
+									on:blur={() => (lastNameFocused = false)}
+									required
+									class="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+									placeholder="Last Name"
+								/>
+								<label
+									for="lastName"
+									class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-primary-400"
+								>
+									Last Name
+								</label>
+							</div>
+						</div>
+
+						<!-- Email & Phone Row -->
+						<div class="grid gap-5 md:grid-cols-2">
+							<!-- Email -->
+							<div class="group relative">
+								<input
+									type="email"
+									id="email"
+									bind:value={email}
+									on:focus={() => (emailFocused = true)}
+									on:blur={() => (emailFocused = false)}
+									required
+									class="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+									placeholder="Email"
+								/>
+								<label
+									for="email"
+									class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-primary-400"
+								>
+									Email Address
+								</label>
+							</div>
+
+							<!-- Phone -->
+							<div class="group relative">
+								<input
+									type="tel"
+									id="phone"
+									bind:value={phone}
+									on:focus={() => (phoneFocused = true)}
+									on:blur={() => (phoneFocused = false)}
+									class="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+									placeholder="Phone"
+								/>
+								<label
+									for="phone"
+									class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-primary-400"
+								>
+									Phone <span class="text-gray-600">(optional)</span>
+								</label>
+							</div>
+						</div>
+
+						<!-- Budget -->
+						<div class="group relative">
+							<input
+								type="text"
+								id="budget"
+								bind:value={budget}
+								on:focus={() => (budgetFocused = true)}
+								on:blur={() => (budgetFocused = false)}
+								class="peer w-full rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+								placeholder="Budget"
+							/>
+							<label
+								for="budget"
+								class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-primary-400"
+							>
+								Project Budget <span class="text-gray-600">(optional)</span>
+							</label>
+						</div>
+
+						<!-- Message -->
+						<div class="group relative">
+							<textarea
+								id="message"
+								bind:value={message}
+								on:focus={() => (messageFocused = true)}
+								on:blur={() => (messageFocused = false)}
+								required
+								rows="4"
+								class="peer w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 pt-5 pb-2.5 text-white placeholder-transparent transition-all duration-300 outline-none focus:border-primary-500 focus:bg-white/10 focus:ring-2 focus:ring-primary-500/20"
+								placeholder="Message"
+							></textarea>
+							<label
+								for="message"
+								class="pointer-events-none absolute top-1.5 left-4 text-xs text-gray-500 transition-all duration-300 peer-placeholder-shown:top-5 peer-placeholder-shown:text-sm peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-primary-400"
+							>
+								Tell us about your project
+							</label>
+						</div>
+
+						<!-- Terms Checkbox -->
+						<label class="group flex cursor-pointer items-start gap-3">
+							<div class="relative mt-0.5">
+								<input type="checkbox" bind:checked={terms} required class="peer sr-only" />
+								<div
+									class="flex h-5 w-5 items-center justify-center rounded-md border-2 border-white/20 bg-white/5 transition-all duration-300 group-hover:border-primary-400 peer-checked:border-primary-500 peer-checked:bg-primary-500 peer-focus:ring-2 peer-focus:ring-primary-500/20"
+								>
+									{#if terms}
+										<svg
+											class="h-3 w-3 text-white"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											stroke-width="3"
+										>
+											<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+										</svg>
+									{/if}
+								</div>
+							</div>
+							<span
+								class="text-sm text-gray-400 transition-colors duration-300 group-hover:text-gray-300"
+							>
+								I agree to the <a
+									href="/terms"
+									class="text-primary-400 underline decoration-primary-400/30 underline-offset-2 transition-colors hover:text-primary-300 hover:decoration-primary-300"
+									>Terms of Service</a
+								>
+								and
+								<a
+									href="/privacy"
+									class="text-primary-400 underline decoration-primary-400/30 underline-offset-2 transition-colors hover:text-primary-300 hover:decoration-primary-300"
+									>Privacy Policy</a
+								>
+							</span>
+						</label>
+
+						<!-- Error/Success Messages -->
+						{#if error}
+							<div
+								class="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-400"
+							>
+								<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								{error}
+							</div>
+						{/if}
+
+						{#if submitted}
+							<div
+								class="flex items-center gap-2 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-2.5 text-sm text-green-400"
+							>
+								<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								Thank you! We'll be in touch soon.
+							</div>
+						{/if}
+
+						<!-- Submit Button - Primary style -->
+						<div class="w-full [&>button]:w-full [&>button]:justify-center">
+							<PrimaryButton>
+								<span slot="text">
+									{#if submitting}
+										<span class="flex items-center gap-2">
+											<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+												<circle
+													class="opacity-25"
+													cx="12"
+													cy="12"
+													r="10"
+													stroke="currentColor"
+													stroke-width="4"
+												></circle>
+												<path
+													class="opacity-75"
+													fill="currentColor"
+													d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+												></path>
+											</svg>
+											Sending...
+										</span>
+									{:else}
+										Send Message
+									{/if}
+								</span>
+							</PrimaryButton>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </section>

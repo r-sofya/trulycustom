@@ -1,5 +1,5 @@
 name: trulycustom
-description: TrulyCustom website built with SvelteKit and Appwrite integration
+description: TrulyCustom website built with SvelteKit and PocketBase
 
 # Build configuration
 build:
@@ -13,11 +13,7 @@ runtime:
 
 # Environment variables (these will be set in Dokploy dashboard)
 env:
-  - VITE_APPWRITE_ENDPOINT
-  - VITE_APPWRITE_PROJECT_ID
-  - VITE_APPWRITE_DATABASE_ID
-  - VITE_APPWRITE_PORTFOLIO_COLLECTION_ID
-  - VITE_APPWRITE_FAQ_COLLECTION_ID
+  - VITE_POCKETBASE_URL
 
 # Port configuration
 port: 3000

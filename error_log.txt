@@ -1,0 +1,24 @@
+Loading svelte-check in workspace: c:\Users\XboxR\OneDrive\Documents\Repositories\trulycustom
+Getting Svelte diagnostics...
+
+c:\Users\XboxR\OneDrive\Documents\Repositories\trulycustom\[32msrc\routes\edit\faq\+page.svelte[39m:181:65
+[31mError[39m: Property 'question' does not exist on type '{ order: any; collectionId: string; collectionName: string; expand?: { [key: string]: any; } | undefined; id: string; }'. (ts)
+[36m				<div class="min-w-0 flex-1">
+					<h3 class="truncate text-lg font-semibold text-white">{faq.[35mquestion[36m}</h3>
+					<p class="mt-1 line-clamp-2 text-sm text-surface-400">{faq.answer}</p>[39m
+
+c:\Users\XboxR\OneDrive\Documents\Repositories\trulycustom\[32msrc\routes\edit\faq\+page.svelte[39m:182:65
+[31mError[39m: Property 'answer' does not exist on type '{ order: any; collectionId: string; collectionName: string; expand?: { [key: string]: any; } | undefined; id: string; }'. (ts)
+[36m					<h3 class="truncate text-lg font-semibold text-white">{faq.question}</h3>
+					<p class="mt-1 line-clamp-2 text-sm text-surface-400">{faq.[35manswer[36m}</p>
+				</div>[39m
+
+c:\Users\XboxR\OneDrive\Documents\Repositories\trulycustom\[32msrc\routes\edit\projects\+page.svelte[39m:434:34
+[31mError[39m: Property 'join' does not exist on type '{}'. (ts)
+[36m				name="tags"
+				value={editingProject?.tags?.[35mjoin[36m(', ') ?? ''}
+				placeholder="web, design, sveltekit"[39m
+
+====================================
+[31msvelte-check found 3 errors and 11 warnings in 5 files
+[39m

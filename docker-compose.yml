@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # PocketBase Backend
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:latest
+    container_name: trulycustom-pocketbase
+    restart: unless-stopped
+    volumes:
+      - ./pb_data:/pb_data
+      - ./pb_migrations:/pb_migrations
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - trulycustom-network
+
+  # SvelteKit Frontend
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trulycustom-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_POCKETBASE_URL=http://pocketbase:8090
+      - NODE_ENV=production
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    networks:
+      - trulycustom-network
+
+networks:
+  trulycustom-network:
+    driver: bridge

@@ -1,8 +1,10 @@
 # Use Node.js 18 Alpine for smaller image size
 FROM node:18-alpine AS base
 
-# Install pnpm
-RUN npm install -g pnpm
+# Enable pnpm via corepack
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app
@@ -22,8 +24,10 @@ RUN pnpm build
 # Production stage
 FROM node:18-alpine AS production
 
-# Install pnpm
-RUN npm install -g pnpm
+# Enable pnpm via corepack
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app

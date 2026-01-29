@@ -1,20 +1,14 @@
-import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-	plugins: [
-		tailwindcss({
-			content: {
-				files: ['./src/**/*.{html,js,svelte,ts}'],
-				transform: {
-					svelte: (content) => {
-						// Remove script sections before parsing for CSS classes
-						return content.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-					}
-				}
-			}
-		}), 
-		sveltekit()
-	]
+	plugins: [tailwindcss(), sveltekit()],
+	test: {
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+		environment: 'node',
+		alias: {
+			$lib: '/src/lib'
+		}
+	}
 });
