@@ -7,7 +7,7 @@ services:
     container_name: trulycustom-pocketbase
     restart: unless-stopped
     volumes:
-      - ./pb_data:/pb_data
+      - ./pb_data_clean:/pb_data
       - ./pb_migrations:/pb_migrations
 
     healthcheck:
