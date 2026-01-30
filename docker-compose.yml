@@ -29,6 +29,8 @@ services:
     environment:
       - VITE_POCKETBASE_URL=http://pocketbase:8090
       - NODE_ENV=production
+      - PB_ADMIN_PASSWORD
+      - ORIGIN
     depends_on:
       pocketbase:
         condition: service_healthy
