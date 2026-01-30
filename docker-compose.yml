@@ -1,23 +1,6 @@
 version: "3.8"
 
 services:
-  # PocketBase Backend
-  pocketbase:
-    image: ghcr.io/muchobien/pocketbase:latest
-    container_name: trulycustom-pocketbase
-    restart: unless-stopped
-    volumes:
-      - ./pb_data_clean:/pb_data
-      - ./pb_migrations:/pb_migrations
-
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - trulycustom-network
-
   # SvelteKit Frontend
   web:
     build:
@@ -27,13 +10,10 @@ services:
     restart: unless-stopped
 
     environment:
-      - VITE_POCKETBASE_URL=http://pocketbase:8090
+      - VITE_POCKETBASE_URL
       - NODE_ENV=production
       - PB_ADMIN_PASSWORD
       - ORIGIN
-    depends_on:
-      pocketbase:
-        condition: service_healthy
     networks:
       - trulycustom-network
 
