@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ cookies }) => {
-    cookies.delete('pb_auth', { path: '/' });
-    throw redirect(302, '/edit/login');
+export const POST: RequestHandler = async ({ locals }) => {
+    locals.pb.authStore.clear();
+    throw redirect(303, '/edit/login');
 };

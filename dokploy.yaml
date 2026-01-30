@@ -14,7 +14,7 @@ runtime:
 # Environment variables (these will be set in Dokploy dashboard)
 env:
   - VITE_POCKETBASE_URL
-  - PB_ADMIN_PASSWORD
+  - VITE_ADMIN_PASSWORD
   - ORIGIN
 
 # Port configuration

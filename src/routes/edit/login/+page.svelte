@@ -26,6 +26,17 @@
 
 			<form method="POST" use:enhance class="space-y-4">
 				<div>
+					<label for="email" class="mb-1 block text-sm font-medium text-surface-200">Email</label>
+					<input
+						id="email"
+						type="email"
+						name="email"
+						required
+						class="w-full rounded-lg border border-surface-600 bg-surface-700 px-4 py-3 text-white placeholder-surface-400 focus:ring-2 focus:ring-primary-500 focus:outline-none"
+						placeholder="admin@example.com"
+					/>
+				</div>
+				<div>
 					<label for="password" class="mb-1 block text-sm font-medium text-surface-200"
 						>Password</label
 					>

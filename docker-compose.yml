@@ -12,7 +12,7 @@ services:
     environment:
       - VITE_POCKETBASE_URL
       - NODE_ENV=production
-      - PB_ADMIN_PASSWORD
+      - VITE_ADMIN_PASSWORD
       - ORIGIN
     networks:
       - trulycustom-network
