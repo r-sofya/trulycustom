@@ -6,29 +6,49 @@
 	let cardElement = $state<HTMLElement>();
 	let scrollProgress = $state(0);
 
+	let elementTop = $state(0);
+	let elementHeight = $state(0);
+	let windowHeight = $state(0);
+
 	// Continuous scroll-based animation
 	$effect(() => {
 		if (!cardElement) return;
 
+		function updateMetrics() {
+			if (!cardElement) return;
+			const rect = cardElement.getBoundingClientRect();
+			elementTop = rect.top + window.scrollY;
+			elementHeight = rect.height;
+			windowHeight = window.innerHeight;
+			// Force an update after metrics change
+			updateScrollProgress();
+		}
+
 		function updateScrollProgress() {
 			if (!cardElement) return;
 
-			const rect = cardElement.getBoundingClientRect();
-			const windowHeight = window.innerHeight;
+			const scrollY = window.scrollY;
+			// Calculate current rect.top without forcing reflow
+			const currentRectTop = elementTop - scrollY;
 
 			// Calculate how far through the viewport the card is
 			// 0 = just entering bottom, 0.5 = center, 1 = exiting top
-			const progress = 1 - (rect.top + rect.height / 2) / (windowHeight + rect.height);
+			const progress = 1 - (currentRectTop + elementHeight / 2) / (windowHeight + elementHeight);
 			scrollProgress = Math.max(0, Math.min(1, progress));
 		}
 
-		updateScrollProgress();
+		// Initial calculation
+		updateMetrics();
+
+		// Update metrics on resize to handle layout changes
+		window.addEventListener('resize', updateMetrics, { passive: true });
+
+		// Only update progress on scroll (lightweight)
 		window.addEventListener('scroll', updateScrollProgress, { passive: true });
-		window.addEventListener('resize', updateScrollProgress, { passive: true });
 
 		return () => {
+			window.removeEventListener('resize', updateMetrics);
 			window.removeEventListener('scroll', updateScrollProgress);
-			window.removeEventListener('resize', updateScrollProgress);
 		};
 	});
 

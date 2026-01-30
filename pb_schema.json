@@ -956,18 +956,16 @@
                 "type": "text"
             },
             {
-                "autogeneratePattern": "",
+                "convertUrls": false,
                 "hidden": false,
-                "id": "text_answer",
+                "id": "editor_answer",
                 "max": 0,
                 "min": 0,
                 "name": "answer",
-                "pattern": "",
                 "presentable": false,
-                "primaryKey": false,
                 "required": true,
                 "system": false,
-                "type": "text"
+                "type": "editor"
             },
             {
                 "hidden": false,

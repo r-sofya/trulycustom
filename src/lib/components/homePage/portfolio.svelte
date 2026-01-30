@@ -86,6 +86,9 @@
 						<img
 							src={project.imageUrl}
 							alt={project.title}
+							loading="lazy"
+							width="600"
+							height="400"
 							class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
 						/>
 					</div>
