@@ -105,8 +105,8 @@ function getPocketBaseErrorMessage(error: unknown): string {
 // Load Function
 // ============================================================================
 
-export const load: PageServerLoad = async () => {
-    const pb = createPocketBase(env.POCKETBASE_URL);
+export const load: PageServerLoad = async ({ locals }) => {
+    const pb = locals.pb;
 
     try {
         const projects = await pb.collection(portfolioCollection).getFullList<PortfolioRecord>({
@@ -130,8 +130,8 @@ export const load: PageServerLoad = async () => {
 // ============================================================================
 
 export const actions: Actions = {
-    create: async ({ request }) => {
-        const pb = createPocketBase(env.POCKETBASE_URL);
+    create: async ({ request, locals }) => {
+        const pb = locals.pb;
         const formData = await request.formData();
 
         // Validate input
@@ -157,8 +157,8 @@ export const actions: Actions = {
         }
     },
 
-    update: async ({ request }) => {
-        const pb = createPocketBase(env.POCKETBASE_URL);
+    update: async ({ request, locals }) => {
+        const pb = locals.pb;
         const formData = await request.formData();
         const id = formData.get('id') as string;
 
@@ -195,8 +195,8 @@ export const actions: Actions = {
         }
     },
 
-    delete: async ({ request }) => {
-        const pb = createPocketBase(env.POCKETBASE_URL);
+    delete: async ({ request, locals }) => {
+        const pb = locals.pb;
         const formData = await request.formData();
         const id = formData.get('id') as string;
 
@@ -220,8 +220,8 @@ export const actions: Actions = {
         }
     },
 
-    reorder: async ({ request }) => {
-        const pb = createPocketBase(env.POCKETBASE_URL);
+    reorder: async ({ request, locals }) => {
+        const pb = locals.pb;
         const formData = await request.formData();
         const orderData = formData.get('order') as string;
 

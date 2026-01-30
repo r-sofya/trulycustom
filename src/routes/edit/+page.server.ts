@@ -2,7 +2,7 @@ import type { Actions } from './$types';
 import pb, { portfolioCollection, faqCollection } from '$lib/utils/pocketbase.js';
 
 export const actions: Actions = {
-    addPortfolio: async ({ request }) => {
+    addPortfolio: async ({ request, locals }) => {
         const formData = await request.formData();
 
         const title = formData.get('title') as string;
@@ -16,7 +16,7 @@ export const actions: Actions = {
             : [];
 
         try {
-            await pb.collection(portfolioCollection).create({
+            await locals.pb.collection(portfolioCollection).create({
                 title,
                 imageUrl,
                 websiteUrl,
@@ -30,14 +30,14 @@ export const actions: Actions = {
         }
     },
 
-    addFaq: async ({ request }) => {
+    addFaq: async ({ request, locals }) => {
         const formData = await request.formData();
 
         const question = formData.get('question') as string;
         const answer = formData.get('answer') as string;
 
         try {
-            await pb.collection(faqCollection).create({
+            await locals.pb.collection(faqCollection).create({
                 question,
                 answer
             });

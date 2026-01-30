@@ -1,9 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
 import pb, { faqCollection } from '$lib/utils/pocketbase.js';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
     try {
-        const faqs = await pb.collection(faqCollection).getFullList({
+        const faqs = await locals.pb.collection(faqCollection).getFullList({
             sort: 'order,created'
         });
         return { faqs };
@@ -14,20 +14,20 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-    create: async ({ request }) => {
+    create: async ({ request, locals }) => {
         const formData = await request.formData();
         const question = formData.get('question') as string;
         const answer = formData.get('answer') as string;
 
         try {
             // Get current max order to place new FAQ at the end
-            const existing = await pb.collection(faqCollection).getFullList({
+            const existing = await locals.pb.collection(faqCollection).getFullList({
                 sort: '-order',
                 fields: 'order'
             });
             const maxOrder = existing.length > 0 ? (existing[0].order ?? 0) : 0;
 
-            await pb.collection(faqCollection).create({
+            await locals.pb.collection(faqCollection).create({
                 question,
                 answer,
                 order: maxOrder + 1
@@ -39,14 +39,14 @@ export const actions: Actions = {
         }
     },
 
-    update: async ({ request }) => {
+    update: async ({ request, locals }) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
         const question = formData.get('question') as string;
         const answer = formData.get('answer') as string;
 
         try {
-            await pb.collection(faqCollection).update(id, { question, answer });
+            await locals.pb.collection(faqCollection).update(id, { question, answer });
             return { success: true, action: 'update' };
         } catch (error) {
             console.error('Error updating FAQ:', error);
@@ -54,12 +54,12 @@ export const actions: Actions = {
         }
     },
 
-    delete: async ({ request }) => {
+    delete: async ({ request, locals }) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
 
         try {
-            await pb.collection(faqCollection).delete(id);
+            await locals.pb.collection(faqCollection).delete(id);
             return { success: true, action: 'delete' };
         } catch (error) {
             console.error('Error deleting FAQ:', error);
@@ -67,7 +67,7 @@ export const actions: Actions = {
         }
     },
 
-    reorder: async ({ request }) => {
+    reorder: async ({ request, locals }) => {
         const formData = await request.formData();
         const orderData = formData.get('order') as string;
 
@@ -81,7 +81,7 @@ export const actions: Actions = {
             // Update each FAQ with its new order
             await Promise.all(
                 items.map((item) =>
-                    pb.collection(faqCollection).update(item.id, { order: item.order })
+                    locals.pb.collection(faqCollection).update(item.id, { order: item.order })
                 )
             );
 
