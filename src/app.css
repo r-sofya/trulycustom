@@ -233,7 +233,8 @@
 }
 
 .transition-all {
-  transition: all ease-in-out;
+  transition-property: opacity, transform, background-color, border-color, color, box-shadow;
+  transition-timing-function: ease-in-out;
   transition-duration: 0.3s;
 }
 
@@ -299,10 +300,7 @@ iframe[src*="branding"] {
   display: none !important;
 }
 
-/* Additional fallback for any remaining Spline elements */
-*:not(body):not(html) {
-  background-image: none !important;
-}
+/* Removed: overly broad rule was stripping background-image from every element */
 
 /* Ensure the main Spline canvas/container is still visible */
 .spline-container,

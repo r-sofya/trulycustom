@@ -11,7 +11,7 @@
 </script>
 
 <!-- Global flowing gradient orbs -->
-<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" style="will-change: auto; contain: strict;">
 	<div
 		class="absolute top-[10%] -left-40 h-[500px] w-[500px] rounded-full bg-primary-500/15 blur-[150px]"
 	></div>

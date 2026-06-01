@@ -91,7 +91,7 @@
 				Let's Connect
 			</span>
 			<h2 class="mb-3 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-				Start Your <span class="bg-gradient-to-r from-primary-400 to-primary-600">Project</span>
+				Start Your Project
 			</h2>
 			<p class="text-base text-gray-400 md:text-lg">
 				Ready to bring your ideas to life? Drop us a message and let's create something amazing
